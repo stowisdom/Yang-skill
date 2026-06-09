@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Napkin Layout · Dark Serif II</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+
+<style>
+  /* ═══════════════════════════════════════════
+     COLOR TOKENS
+  ═══════════════════════════════════════════ */
+  :root {
+    --bg:           #0c0c0a;
+    --surface:      #131310;
+    --border:       #252520;
+
+    --text-body:    #c8c3b6;       /* 亚麻白正文 */
+    --text-dim:     #9a9485;   /* 从 #5a5a50 提亮，保持暖调不偏灰 */
+    --text-label:   #3a3a32;
+
+    --accent-gold:  #b08a4a;       /* 铜金：「」中等层次 */
+    --accent-blue:  #7ab8a0;   /* 青瓷绿，替换原尘蓝 */
+    --accent-wine:  #8b3a3a;       /* 酒红：装饰/引言线 */
+
+    /* 餐巾纸线条：旧纸折痕色，暖米灰 */
+    --napkin-rule:  #3e3a2e;       /* 内部分割线，羊皮纸折痕 */
+    --napkin-crease:#4a4232;       /* 顶部折痕线，更暖更明 */
+
+    --font-body:    'Noto Serif SC', 'Georgia', serif;
+    --font-display: 'Playfair Display', 'Noto Serif SC', serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    font-size: 17px;
+    background: var(--bg);
+    color: var(--text-body);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    padding: 72px 24px 104px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+
+  /* ═══════════════════════════════════════════
+     NAPKIN CARD
+  ═══════════════════════════════════════════ */
+  .napkin {
+    width: 100%;
+    max-width: 720px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 1px;
+    padding: 60px 68px 64px;
+    position: relative;
+    margin-bottom: 3px;
+  }
+
+  /* 顶部折痕线：暖米灰，模拟餐巾纸折叠痕 */
+  .napkin::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--napkin-crease) 18%,
+      var(--napkin-crease) 82%,
+      transparent 100%
+    );
+    margin-bottom: 48px;
+    opacity: 0.55;
+  }
+
+  /* 餐巾纸编号 */
+  .napkin-index {
+    position: absolute;
+    top: 22px;
+    right: 30px;
+    font-family: var(--font-display);
+    font-size: 0.66rem;
+    letter-spacing: 0.24em;
+    color: var(--text-label);
+    text-transform: uppercase;
+  }
+
+  /* ═══════════════════════════════════════════
+     TYPOGRAPHY
+  ═══════════════════════════════════════════ */
+
+  /* 正文：300 weight，行高 2em */
+  .napkin p {
+    font-size: 1rem;
+    font-weight: 300;
+    line-height: 2em;
+    color: var(--text-body);
+    letter-spacing: 0.045em;
+    margin-bottom: 2em;
+  }
+  .napkin p:last-of-type { margin-bottom: 0; }
+
+  /* ── 层次一：大号「」关键词
+     中等概念层：道家哲学、无为、第二大脑
+     Playfair Display，字号拉开到 1.55rem，铜金色
+  ── */
+  .kw {
+    font-size: 1.55rem;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-style: italic;
+    color: var(--accent-gold);
+    letter-spacing: 0.04em;
+    line-height: 1;          /* 不撑开行高，嵌在段落里自然浮起 */
+    display: inline;
+  }
+  .kw::before { content: '「'; font-weight: 400; opacity: 0.65; }
+  .kw::after  { content: '」'; font-weight: 400; opacity: 0.65; }
+
+  /* ── 层次二：细节<>关键词
+     人名、地名、具体工具：老子、庄子、Obsidian
+     正文同号，青瓷绿色，无框但有括号感
+  ── */
+  .detail {
+    font-size: 1rem;
+    font-style: normal;
+    color: var(--accent-blue);
+    letter-spacing: 0.05em;
+  }
+  .detail::before { content: '\003C'; opacity: 0.45; }
+  .detail::after  { content: '\003E'; opacity: 0.45; }
+
+  /* ── 层次三：变量{}占位符
+     可替换的参数、待填充的值
+     虚线下划线 + 暖棕色，暗示"这里可以换成别的内容"
+  ── */
+  .param {
+    font-size: 1rem;
+    color: #8a7a5a;
+    border-bottom: 1px dashed #8a7a5a;
+    padding-bottom: 1px;
+    letter-spacing: 0.04em;
+  }
+  .param::before { content: '{'; opacity: 0.45; }
+  .param::after  { content: '}'; opacity: 0.45; }
+
+  /* ── 酒红色：用于引言块左线 + 底部脚注线 ── */
+
+  /* 章节标题 */
+  .napkin h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 400;
+    font-style: italic;
+    color: #ddd5c2;
+    letter-spacing: 0.06em;
+    line-height: 1.5;
+    margin-bottom: 2.2em;
+  }
+
+  /* 内部分割线：羊皮纸折痕感 */
+  .rule {
+    width: 100%;
+    height: 1px;
+    border: none;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      var(--napkin-rule) 12%,
+      var(--napkin-rule) 88%,
+      transparent 100%
+    );
+    margin: 2.2em 0;
+    opacity: 0.7;
+  }
+
+  /* 引言块：酒红左线 */
+  .aside {
+    border-left: 1.5px solid var(--accent-wine);
+    padding-left: 1.4em;
+    margin: 2.2em 0;
+    color: var(--text-dim);        /* ← 现在继承提亮后的值 */
+    font-size: 0.9rem;
+    line-height: 2em;
+    font-style: italic;
+    letter-spacing: 0.03em;
+  }
+
+  /* 底部脚注：酒红顶线 */
+  .napkin-footer {
+    margin-top: 3.2em;
+    padding-top: 1.4em;
+    border-top: 1px solid var(--accent-wine);
+    font-size: 0.68rem;
+    color: var(--text-label);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 600px) {
+    .napkin { padding: 40px 28px 44px; }
+    .napkin h2 { font-size: 1.2rem; }
+    .kw { font-size: 1.28rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     餐巾纸 · 壹 — 道的起源
+══════════════════════════════ -->
+<article class="napkin">
+  <span class="napkin-index">No. 01</span>
+
+  <h2>道从何处来</h2>
+
+  <p>
+    <span class="kw">道家哲学</span>的思想，起于对宇宙本源的追问。
+    <span class="detail">老子</span>在<span class="kw">《道德经》</span>中写道：
+    道可道，非常道——
+    这句话不是拒绝定义，而是在说，任何语言触碰到的，都只是道的影子。
+  </p>
+
+  <hr class="rule">
+
+  <p>
+    他所指的<span class="kw">道</span>，是先于天地而存在的某种秩序，
+    无形、无声、无味，却是万物生长的底层结构原则。
+    它不是神，不是意志，是一种自然涌现的规律。
+  </p>
+
+  <div class="aside">
+    「道生一，一生二，二生三，三生万物。」<br>
+    ——<span class="detail">《道德经》第四十二章</span>
+  </div>
+
+  <p>
+    理解这一点，需要放弃用<span class="kw">因果律</span>去追问道的来源。
+    道不是被创造的，它本身就是一切创造的前提。
+  </p>
+
+  <div class="napkin-footer">Step 01 · 起源</div>
+</article>
+
+
+<!-- ══════════════════════════════
+     餐巾纸 · 贰 — 无为的机制
+══════════════════════════════ -->
+<article class="napkin">
+  <span class="napkin-index">No. 02</span>
+
+  <h2>无为，不是不作为</h2>
+
+  <p>
+    <span class="kw">无为</span>是<span class="kw">道家哲学</span>最容易被误读的概念。
+    它不是消极，不是懒惰，而是一种精确的行动哲学——
+    顺应事物自身的节律，不强加人为的扭曲。
+  </p>
+
+  <p>
+    <span class="detail">庄子</span>用<span class="kw">庖丁解牛</span>来说明这一点：
+    刀刃游走于骨骼之间的缝隙，从不硬切，
+    这正是顺势而为的最高技艺。
+    力量不在于对抗，而在于找到那条阻力最小的路径。
+  </p>
+
+  <hr class="rule">
+
+  <p>
+    在现代语境中，这与<span class="kw">系统思维</span>高度共鸣：
+    一个设计良好的系统，应当让正确的事情自然发生，
+    而非依赖持续的外部干预来维持运转。
+  </p>
+
+  <div class="napkin-footer">Step 02 · 机制</div>
+</article>
+
+
+<!-- ══════════════════════════════
+     餐巾纸 · 叁 — 当代映射
+══════════════════════════════ -->
+<article class="napkin">
+  <span class="napkin-index">No. 03</span>
+
+  <h2>道家与当代知识工具</h2>
+
+  <p>
+    当<span class="kw">道家哲学</span>遭遇当代的<span class="kw">知识管理</span>，
+    我们发现两者共享一个核心假设：结构先于内容。
+    好的笔记系统，如同道，提供的是容纳思想流动的空间，
+    而不是强制分类的框架。
+  </p>
+
+  <div class="aside">
+    工具如<span class="detail">Obsidian</span>、<span class="detail">Roam Research</span>
+    的双向链接机制，正是在模拟思维的网状涌现，
+    而非线性归档。
+  </div>
+
+  <p>
+    <span class="kw">第二大脑</span>理论由<span class="detail">Tiago Forte</span>提出，
+    其中的渐进式总结，本质上也是一种无为——
+    让笔记在被反复阅读中自然浮现其价值，
+    而非一次性强行提炼。
+  </p>
+
+  <p>
+    <span class="kw">道家哲学</span>给我们的最后一课是：
+    不要过早关闭可能性空间。
+    留白，本身就是一种设计语言。
+  </p>
+
+  <div class="napkin-footer">Step 03 · 映射</div>
+</article>
+
+</body>
+</html>
