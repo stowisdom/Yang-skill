@@ -1,6 +1,6 @@
 # Yang's Craft Agent Skills Collection
 
-这是一个 Craft Agent 技能集合，包含了各种实用的 AI 技能。
+这是 **Yang** 设计的 Craft Agent 技能集合，包含各种实用的 AI 技能。
 
 ## 📋 技能列表
 
@@ -18,7 +18,6 @@
 ### 生活技能
 - `money-yang-018` - 财务管理
 - `foggdesign-yang-001` - 行为设计
-- `relationship` - 人际关系
 
 ### 工作技能
 - `work-explain-yang-011` - 工作说明
@@ -31,16 +30,8 @@
 - `paper-collecting-yang-013` - 论文收集
 - `jiantu-tuijian-yang-014` - 简图推荐
 
-### 知识星球技能
-- `zsxq-group` - 知识星球小组
-- `zsxq-note` - 知识星球笔记
-- `zsxq-shared` - 知识星球分享
-- `zsxq-topic` - 知识星球话题
-- `zsxq-user` - 知识星球用户
-
 ### 其他技能
 - `dokobot-yang-003` - Dokobot 技能
-- `gpt-image` - GPT 图像处理
 
 ## 🚀 使用方法
 
@@ -57,9 +48,10 @@
 
 ## 🔄 更新记录
 
-- 2026-06-09: 初始版本，包含所有核心技能
+- 2026-06-09: 初始版本，包含所有 Yang 设计的技能
 
 ---
 
-**作者**: Yang
+**作者**: Yang-YuFan
 **仓库**: [Yang-skill](https://github.com/stowisdom/Yang-skill)
+**许可证**: 仅限个人使用
