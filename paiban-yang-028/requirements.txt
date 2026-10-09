@@ -1,0 +1,7 @@
+# paiban-yang-028 核心依赖（排版 / 机检 / 渲染主链）
+# 安装：py -3.12 -m pip install -r requirements.txt
+# 为什么只钉这一个：主链脚本（typeset/check/render）全是 stdlib，
+# 唯一硬依赖是 pypdfium2——机检第 7/8 项读 PDF 墨点与回读文本、imgdiag --pdf 抽内嵌图都靠它。
+pypdfium2>=4.20
+# 可选：Pillow>=10 —— 读图尺寸与像素分析优先用它；不装也能跑，
+# typeset/imgdiag 内置 PNG/JPEG 读头与 stdlib PNG 解码兜底（速度略慢，判型精度不变）。

@@ -1,0 +1,7 @@
+# paiban-yang-028 音频转写依赖（T1 音频适配器 scripts/asr.py 专用）
+# 安装：py -3.12 -m pip install -r requirements-asr.txt
+# 环境注意：必须 py -3.12（默认 3.14 无 wheel）；模型下载走 HF_ENDPOINT=https://hf-mirror.com。
+faster-whisper>=1.0
+av>=12            # PyAV 自带解码，不需要装 ffmpeg
+# GPU 加速（可选，约 1GB 磁盘，实测 12.5-15x 实时）：三件套见 REFERENCE.md「音频适配器实测事实」——
+#   py -3.12 -m pip install nvidia-cublas-cu12 nvidia-cuda-runtime-cu12 nvidia-cuda-nvrtc-cu12

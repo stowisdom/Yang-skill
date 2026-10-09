@@ -1,0 +1,9 @@
+# paiban-yang-028 图片重绘依赖（T1b：scripts/imgdiag.py 的 OCR 判型 + scripts/imgredraw.py 表格/代码/整页文字重绘）
+# 安装：py -3.12 -m pip install -r requirements-img.txt
+# 纪律：本组依赖只在 imgdiag/imgredraw 内部懒加载（函数内 import），
+# 主链 typeset.py / check.py 绝不 import——不装 OCR，排版主链照常全绿。
+rapidocr>=3.9       # onnxruntime 底座、numpy 2 原生；首跑自动下载自带模型（约 40MB）
+rapid-table>=3.0    # RapidTable 表格结构识别（产 HTML，imgredraw --kind table 用）
+# 废弃勿回退：paddlepaddle/paddleocr —— 2026-09-30 实测 3.x 删了 PPStructure，
+# 2.6 栈在本机 oneDNN/scale op 报错，全部 FLAGS 无效（详见 REFERENCE.md「图片处理（T1b）」节）。
+# P2 登记（本期不实现）：realesrgan —— 架构图/模糊图超分，命令届时记进 REFERENCE.md「图片处理（T1b）」节。

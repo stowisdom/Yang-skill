@@ -1,0 +1,138 @@
+﻿/* paiban-yang-028 · 纸面硬半页版式
+   与 REFERENCE.md「版式参数」表同源，两处必须一致。规范真源：typography.md v0.4
+   核心约束：内容区 ≤140mm（A4 近半）｜下半页 .writezone 必须为空｜正文每行 ≤36 汉字
+*/
+
+@page {
+  size: A4 portrait;
+  margin: 25mm 25mm 50mm 25mm;   /* 末页下白 50mm：手持 + 做笔记（PLOS 实证） */
+}
+
+html, body {
+  margin: 0; padding: 0;
+  background: #faf6ef;                 /* 纸 */
+  color: #3a352e;                      /* 墨·中 */
+  font-family: "STKaiti", "KaiTi", "华文楷体", serif;
+  font-size: 12pt;
+  line-height: 2.0;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* ===== 页与两区 ===== */
+/* 高度留 6mm 余量（222 → 216mm）：实测 40 个 .page 的文档印出 50 张纸——
+   222mm 与可印区（297-25-50）分毫不差，任何亚像素取整都会把一个 div 挤到第二张。
+   宁可留白多 6mm，也不许一页变两页（页码一错，后面所有页的验收数据全部错位）。
+   别给 .page 加 overflow:hidden —— A/B 实测：加了同一份 13 页文档，
+   最右墨点从 184.1mm 涨到 186.8mm、最低从 155.1mm 涨到 161.0mm，
+   滚动容器在印刷流里会把内容整体往外推，反而制造越界。页/张数不符交给闭环收紧解决。 */
+.page {
+  position: relative;
+  width: 160mm;                        /* 210 - 25*2 */
+  height: 200mm;                       /* 可印区 222mm 留 22mm 余量：见上方说明 */
+  /* 断页只写 break-after: page，别再叠 page-break-after: always。
+       91 个 .page 印出 96 张、5 张全白。A/B 实测（同一份卷二 HTML，只改一条）：
+         .page 高 216mm → 96 张 / 5 白      ← 6mm 余量不够，Edge 仍在个别页尾多断一次
+         .page 高 205mm → 91 张 / 0 白      ← 采用 200mm，留足 22mm
+         .page 高 200mm → 91 张 / 0 白
+         改断页属性写法（break-after / page-break-after 单留任一）→ 无效，仍是 96
+       结论：这是「盒高 vs 可印区」的取整问题，不是断页属性问题。余量要一次给够，别抠 6mm。 */
+  break-after: page;
+}
+.page:last-child { break-after: auto; }   /* 末页别再拖一张白页 */
+
+.content { max-height: 140mm; overflow: visible; }   /* 硬上限：超即换页，不许挤 */
+.writezone { min-height: 60mm; }                     /* 下半页留白；内部不得有内容 */
+
+/* ===== 字阶（1.25 Major Third：12 → 15 → 18.75pt）===== */
+/* 尺寸档位不动（规范定的梯子），层级靠 **粗细 + 颜色 + 底线** 拉开：
+   实测 12pt 的 h3 与 12pt 正文只差一个字重，扫页面时根本找不着节标题——层级等于没有。 */
+h1 { font-size: 18.75pt; font-weight: 600; color: #2b2b2b; margin: 0 0 .6em 0; letter-spacing: .01em; }
+h2 { font-size: 15pt;    font-weight: 700; color: #9a7123; margin: 1.6em 0 .5em 0;
+     border-bottom: .6pt solid #d8cfc0; padding-bottom: .18em; }
+h3 { font-size: 12pt;    font-weight: 700; color: #2b2b2b; margin: 1.2em 0 .4em 0; letter-spacing: .02em; }
+.note { font-size: 9.6pt; color: #8a8177; }          /* 注释档 */
+
+/* ===== 结构信号 ===== */
+.para { text-indent: 2em; margin: 0 0 1.4em 0; }               /* 首行缩进 */
+.l1 { margin-left: 0; }                                        /* 层级只由缩进表达 */
+.l2 { margin-left: 1.6em; }
+.l3 { margin-left: 3.2em; }
+.l4 { margin-left: 4.8em; }
+.sep { border: 0; border-top: 1px solid #d8cfc0; margin: 1.6em 0; } /* --- = 同级硬断 */
+.crease { height: 1px; background: linear-gradient(90deg, transparent, #d8cfc0, transparent); margin: 1.2em 0; }
+
+/* ===== 行内代码 / 文件引用 ===== */
+/* 整段不可拆、不切语义间隙：`HomeScreen.tsx:19` 被切成 `HomeScreen.tsx： 19` 就没法照着找文件了 */
+.ci { font-family: Consolas, monospace; font-size: .92em; background: #fffdf9;
+      padding: 0 .18em; border-radius: 2px; overflow-wrap: anywhere; }
+/* 不许 nowrap：实测 nowrap 的长代码段把行推出 185.9mm 版心右沿，还连带把整页撑到第二张纸 */
+
+/* ===== 逐行语义块 ===== */
+.line { display: block; white-space: nowrap; }        /* 行=语义单元，不随窗口重排 */
+.u { margin-right: .6em; }                            /* 词间标准间隙 */
+.u-p { margin-right: .88em; }                         /* 句读收尾加重一档 */
+
+/* ===== 标注系统（符号即语义，禁止泛用为强调）===== */
+mark { background: none; color: inherit; }
+.per { color: #9a7123; }                              /* 「」人物/作品/具体名词 */
+.theory { color: #3f6f7d; border-bottom: 1px dotted #3f6f7d; } /* <>理论/方法 */
+.concept { color: #9a7123; background: rgba(212,201,168,.07); }/* {}概念/术语 */
+.paren { color: #8a8177; font-size: .92em; }          /* ()注释 */
+.entry { font-weight: 500; display: block; }          /* 【】条目标题 */
+.entry-i { font-weight: 600; color: #2b2b2b; }        /* 【】条目标题·行内（散文稿：句子中间的条目，不能块级化） */
+.rel { color: #c0392b; }                              /* → ⇨ ∵ 逻辑连接符 */
+
+/* ===== 代码：只换呈现，不回写 ===== */
+/* 注意 `pre, code` 这条**命不中实际产物**：typeset 输出的是
+   <div class="code-block"><span class="code-line">…</span></div>，既不是 <pre> 也不是 <code>。
+   2026-09-27 实测《Claude Code实战》第 5/6/8/9 章成品 PDF：Consolas 出现 0 次，代码全部印成
+   MicrosoftYaHei——规范「代码：等宽呈现」这条一直没落地。等宽声明必须挂在 .code-block 上。 */
+pre, code { font-family: Consolas, monospace; font-size: 10.5pt; line-height: 1.9; }
+/* 不许 white-space:pre —— 长行会冲出右边界（实测：Mermaid 一行 210 字直接溢出页面）。
+   pre-wrap 保留缩进与换行，同时允许超长行折回版心。 */
+.code-block { background: #fffdf9; border: 1px solid #d8cfc0; padding: .6em .8em;
+              white-space: pre-wrap; overflow-wrap: anywhere; page-break-inside: auto;
+              font-family: Consolas, "Courier New", monospace; font-size: 10.5pt; line-height: 1.9; }
+.code-line { display: block; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* ===== 表格 ===== */
+/* 必须定宽 + fixed 布局：auto 布局会把短列压成 1 字宽（实测「用户行动」竖排成单字），
+   且整表宽度不受版心约束、冲出右边界。列宽由 typeset.py 按内容实测比例写入 <col>。 */
+table { border-collapse: collapse; font-size: 10.5pt; line-height: 1.9;
+        width: 100%; table-layout: fixed; }
+th, td { border-bottom: 1px solid #d8cfc0; padding: .3em .5em; text-align: left;
+         vertical-align: top; overflow-wrap: anywhere; }
+th { color: #2b2b2b; font-weight: 500; border-bottom: 1px solid #a89c88; }
+table.cont { border-top: 1px solid #a89c88; }         /* 跨页续表：无表头，顶线加重示意接续 */
+
+/* ===== 图（照搬原图进纸面）===== */
+/* 物理闸在生成端：宽 ≤160mm，高 = 当前页容量 cap − 块距 10mm −（有图注再扣 10mm），
+   typeset.py 按真实像素算好后把 mm 写进 style，闭环每收紧一次 cap 就重算重量一次。
+   图超高只缩不拆（拆了就不是图了），预留量不够时交机检判红。
+   图注走正文同一套切行（≤36 字 / ≤37.8em / 禁则），所以这里是 .line 块级居中；
+   display:block + margin auto 那套不适用：inline 会多出基线间隙，量高与印刷对不上。 */
+.fig { break-inside: avoid; margin: 1.2em 0; text-align: center; page-break-inside: avoid; }
+.fig img { border: 1px solid #d8cfc0; }            /* 细边帮图在纸色上定界 */
+.fig figcaption { font-size: 9.6pt; color: #8a8177; margin-top: .6em; line-height: 1.9; }
+.fig figcaption .line { text-align: center; }
+
+/* ===== 独占图页（typeset --fig-fullpage 命中的页，帆拍板项）===== */
+/* 诊断判定「重绘不了又缩到看不清」的图，帆点头后独占一页：该页无 .writezone，
+   内容区放宽到页框 200mm；机检第 6/7 项凭 data-figpage 豁免 140mm 上限（豁免口径与
+   check.FIGPAGE_CAP_MM / typeset.FIG_PAGE_CAP_MM 同源）。*/
+.page.figpage .content { max-height: 200mm; }
+.page.figpage .fig { margin-top: 0; }              /* 独占页图靠页顶起排，视觉重心更稳 */
+
+
+/* ===== KaTeX 公式渲染 ===== */
+/* 公式与正文协调：字号略小（11pt），行距与正文一致，颜色与正文墨色一致。
+   块级公式独占一行居中，行内公式与文字同基线。 */
+.katex { font-size: 11pt; color: #3a352e; }
+.katex-block { display: block; text-align: center; margin: 1.2em 0; font-size: 12pt; }
+.katex-block .katex { font-size: 12pt; }
+/* KaTeX 字体路径：本地资产优先，fonts/ 目录与 katex.min.css 同级 */
+
+/* ===== 兜底 ===== */
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+@media screen { .page { box-shadow: 0 0 0 1px #d8cfc0; margin: 8px auto; } }
